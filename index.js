@@ -6,7 +6,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const Post = require('./models/posts.js');
 const routes = require('./Routes/routes.js');
-const MongoClient = require('mongodb').MongoClient
+const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectID;
 
 const app = express();
 const connectionString = ''
@@ -14,40 +15,73 @@ const connectionString = ''
 
 mongoose.connect(connectionString,{useNewUrlParser: true})
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
 
 
-MongoClient.connect(connectionString,{useUnifiedTopology:true})
-  .then(clent=>{
+MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopology: true })
+  .then(client=>{
     console.log('connected to database')
     const db = client.db('new-db')
-    const personCollection = db.collection("");
+    const postCollection = db.collection("posts");
 
-    app.post('/quotes',(req,res)=>{
-      personCollection.insertOne(req.body)
+
+    app.post('/posts',(req,res)=>{
+      //CREATE
+      postCollection.insertOne(req.body)
         .then(result=>{
           console.log(result)
+          res.send('all good');
         })
         .catch(error=>console.log(error))
     })
+
+
+    app.get('/all',(req,res)=>{
+      //READ
+      postCollection.find().toArray()
+      .then(results=>{
+        res.send(results)
+      })
+      .catch(error =>console.error(error))
+    })
+
+    app.put('/update',(req,res)=>{
+      //UPDATE
+      postCollection.update({"_id": ObjectId(`${req.body.id}`)},{
+        $set:{"body":req.body.body}
+      })
+      .then(results=>{
+        console.log(results)
+        res.send(results)
+      })
+      .catch(error=>{
+        res.send(error)
+        console.log(error)
+      })
+    })
+    app.delete('/delete',(req,res)=>{
+
+    })
+      //DELETE
   })
   .catch(err=>console.error('error: ' + err))
 
-app.use(bodyParser.json())
 
-app.post('/quotes',(req,res)=>{
-  const posts = new Post ({
-    title: req.body.title,
-    body:req.body.body
-  })
-  posts.save((error,document)=>{
-    if(error){
-      console.log(error)
-    }else{
-      console.log(document)
-    }
 
-  })
-})
+// app.post('/quotes',(req,res)=>{
+//   const posts = new Post ({
+//     title: req.body.title,
+//     body:req.body.body
+//   })
+//   posts.save((error,document)=>{
+//     if(error){
+//       console.log(error)
+//     }else{
+//       console.log(document)
+//     }
+//
+//   })
+// })
 
 app.get('/',(req,res)=>{
   res.send('hello world')
