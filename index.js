@@ -4,30 +4,51 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const flash =require('connect-flash');
-
+const Post = require('./models/posts.js');
 const routes = require('./Routes/routes.js');
+const MongoClient = require('mongodb').MongoClient
 
 const app = express();
+const connectionString = ''
+//connection string
 
-// mongoose.connect("mongodb://localhost:27017");
-//
-// app.set("port",process.env.PORT || 3000);
-//
-// app.use(bodyParser.urlencoded({extended:false}));
-// app.use(cookieParser());
-// app.use(session({
-//   secret:"keyboard_cat",
-//   resave:true,
-//   saveUninitialized:true
-// }))
-// app.use(flash());
-// app.listen(app.get('port'), function(){
-//   console.log("server started on port" + app.get("port"))
-// })
+mongoose.connect(connectionString,{useNewUrlParser: true})
+app.use(bodyParser.urlencoded({extended: true}))
+
+
+MongoClient.connect(connectionString,{useUnifiedTopology:true})
+  .then(clent=>{
+    console.log('connected to database')
+    const db = client.db('new-db')
+    const personCollection = db.collection("");
+
+    app.post('/quotes',(req,res)=>{
+      personCollection.insertOne(req.body)
+        .then(result=>{
+          console.log(result)
+        })
+        .catch(error=>console.log(error))
+    })
+  })
+  .catch(err=>console.error('error: ' + err))
+
+app.use(bodyParser.json())
+
 app.post('/quotes',(req,res)=>{
-  res.send('it do be like that sometimes')
+  const posts = new Post ({
+    title: req.body.title,
+    body:req.body.body
+  })
+  posts.save((error,document)=>{
+    if(error){
+      console.log(error)
+    }else{
+      console.log(document)
+    }
+
+  })
 })
+
 app.get('/',(req,res)=>{
   res.send('hello world')
 })

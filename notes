@@ -1,0 +1,63 @@
+EXPRESS:
+- middleware, otherwise know as middleware functions, I think it just a function that sits on the path and fire when the path is called.
+
+
+- require is a Node funciton for importing a module. By default, Node looks for modules in the node_modules
+- middleware that does not return a response, needs to call a next function.
+-we will need a library that will let us talk to Mongo from Node, and therefore from express. There are a number of lower-level modules
+this is where we will use mongoose
+- mongoose provides a schema-based solution to modeling our application data and includes built-in type casting, validating, query building
+business logic hooks and more, out of the box
+
+MONGOOSE:
+- so the first thing that we do is install mongoose, then we define our database schema, everything in Mongoose starts with a Schema, the
+each schema maps the a MongoDb collection and defines the shape of the documents within that collection
+- to make sure that our password is safe, we will need to run a pre-save action. This will hash the password
+
+- in bcrypt we are using technique 1 to hash a password, which is to generate a dalt and hash on separate function calls
+- the userSchema.pre function that we set up means that we dont have to call the hashin function every time we create a user
+
+-once we have defined the schema and its properties and methods, you'll need to attach that schema to an actual model.
+- to use our schema, we need to convert it into a Model we can work with. by defulat Mongoose adds an _id property to your schema
+
+
+WHAT IS BODY PARSER:
+- the bodyParser object exposes various factories to create middlewares. all middleware will populate the req.body property with the
+parsed body when the Content-Type request header matches the type option, or an empty object({}) if there was no body to parser, the
+content-type was not matched, or an error occured.
+- so we need to use bodyParser() if we want the form data to be available in req.body.
+- so the database schema provides us with a structured look on how data will look
+
+
+SETTING UP MONGOOSE , MONGODB AND EXPRESS:
+-so mongoose is an Object Data modeling (ODM) library for MongoDB and Node.js. it manages relationships between data provides schema validation
+and is used to translate between objects in code and the representation of the those object in MongoDB
+-MongoDB is a schemaless NoSQL document database, meaning that we can store JSON in it
+
+- the first thing that we need to do is include mongoose in our project and open a connection to the database on our locally running instance
+of MongoDB
+
+- MongoDB is almost always run as a network server that clients can connect to and perform operations on. we call mongod to start the server
+- by default MongoDB listens for socket connections on port 27017
+
+MONGO SHELL:
+- the shell is used for performing administrative functions, inspecting a running instance, or just playing around
+- to start the shell we just run mongo. the shell automatically attempts to connect to a MongoDB server on startup. so this means that you
+should have mongod started in another shell before runing the mongo command to get the shell
+- the shell is also a standalong MongoDB client. On startup the shell connects to the test database on a MongoDB server and assigns this
+database connection to the db variable
+
+- when we want to work with any part of the request body we have to remember that we need to use body-parser and use it as a middllware on
+our routes
+- so mongoose, is a framework for mongoDB and it seems like you literaly dont need it, their are definetly benefits to using it but it seems to
+be more useful if you have a larger application, it seems like it may be the redux of the backend world.
+- so mongo db is what we use to create the database but the data has to live somewhere so we are going to use the atlas servers
+- so we have created a cluster and got the connection, string we just have to add our usernmae and password, as well as our database name.
+We also have to make sure that our ip-adress is white listed otherwise we will get an error when trying to access it.
+- most applications have one databases, like mongo. These databases are hosted by servers. A ongo server can have many databases on it,but
+there is generally one database per application. to access these databases, you'll run a Mongo server. Clients will talk to these servers,
+viewing and manipulating the database. There are clients libraries for most programming languages; these libraries are called drivers
+and let us talk to the database in our favorite programming language
+-a Monogo server can have many databases on it, but generally there is only one per application
+- to access these databases, you'll run a Mongo server. then clients will talk to these servers and be able to play with the data
+-so the connect lets us connect to the MongoDB using a url as documented.
