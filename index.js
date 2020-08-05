@@ -32,7 +32,10 @@ MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopol
           console.log(result)
           res.send('all good');
         })
-        .catch(error=>console.log(error))
+        .catch(error=>{
+          res.status(500)
+          console.log(error)
+        })
     })
 
 
@@ -40,9 +43,25 @@ MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopol
       //READ
       postCollection.find().toArray()
       .then(results=>{
+        res.status(200)
         res.send(results)
       })
-      .catch(error =>console.error(error))
+      .catch({
+        res.status(500)
+        error =>console.error(error)
+      })
+    })
+
+    app.get('/find',(req,res)=>{
+      //find based on title
+      postCollection.find({title:`${req.body.title}`}).toArray()
+        .then(result=>{
+          res.status(200)
+          res.send(result)
+        })
+        .catch(error=>{
+          res.status(500)
+          console.error(error)})
     })
 
     app.put('/update',(req,res)=>{
@@ -51,41 +70,32 @@ MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopol
         $set:{"body":req.body.body}
       })
       .then(results=>{
-        console.log(results)
+        res.status(200)
         res.send(results)
       })
       .catch(error=>{
+        res.status(500)
         res.send(error)
         console.log(error)
       })
     })
+
     app.delete('/delete',(req,res)=>{
+      //DELETE
+      postCollection.deleteOne({"_id":ObjectId(`${req.body.id}`)})
+        .then(result=>{
+          res.status(200)
+          res.send(result)
+        })
+        .catch(error=>{
+          res.status(500)
+          console.log('error: ' + error)
+        })
 
     })
-      //DELETE
+
   })
   .catch(err=>console.error('error: ' + err))
-
-
-
-// app.post('/quotes',(req,res)=>{
-//   const posts = new Post ({
-//     title: req.body.title,
-//     body:req.body.body
-//   })
-//   posts.save((error,document)=>{
-//     if(error){
-//       console.log(error)
-//     }else{
-//       console.log(document)
-//     }
-//
-//   })
-// })
-
-app.get('/',(req,res)=>{
-  res.send('hello world')
-})
 
 app.listen(3000,function(){
   console.log('listening on 3000')
