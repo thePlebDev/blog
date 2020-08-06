@@ -1,11 +1,13 @@
 import React from 'react'
 
-import SearchBar from '../SearchBar'
+import SearchBar from '../SearchBar';
+import MainDisplay from '../MainDisplay';
 
 const App = ()=>{
   return(
-    <div>
+    <div >
       <SearchBar  />
+      <MainDisplay />
     </div>
   )
 }

@@ -20,11 +20,12 @@ const Button = styled.button`
 `
 
 const Container = styled.div`
-  position:relative:
+  position:relative;
+  height:100px;
 `
 
 const Input = styled.input`
- height:3.7em;
+ height:2.5em;
  position:absolute;
  top:20%;
  left:18%;
@@ -34,7 +35,7 @@ const Input = styled.input`
  box-shadow: 0px 0px 6px rgba(0,0,0,0.2);
  border:1px solid rgba(0,0,0,0.2);
  transition:width 350ms ease-out, opacity 300ms ease-out;
-
+ font-size:20px;
  width:${props=>props.state? '60%': '0%'};
  opacity:${props=>props.state? '1': '0'};
 `
