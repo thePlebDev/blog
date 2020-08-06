@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const Post = require('./models/posts.js');
 const routes = require('./Routes/routes.js');
+const cors = require('cors');
+
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectID;
 
@@ -16,6 +18,7 @@ const connectionString = ''
 mongoose.connect(connectionString,{useNewUrlParser: true})
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+app.use(cors())
 
 
 MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopology: true })
@@ -46,7 +49,7 @@ MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopol
         res.status(200)
         res.send(results)
       })
-      .catch({
+      .catch(error=>{
         res.status(500)
         error =>console.error(error)
       })
