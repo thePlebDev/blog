@@ -16,7 +16,8 @@ const connectionString = ''
 //connection string
 
 mongoose.connect(connectionString,{useNewUrlParser: true})
-app.use(bodyParser.urlencoded({extended: true}))
+
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json())
 app.use(cors())
 
@@ -59,6 +60,7 @@ MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopol
       //find based on title
       postCollection.find({title:`${req.body.title}`}).toArray()
         .then(result=>{
+          console.log(req.params)
           res.status(200)
           res.send(result)
         })
@@ -100,6 +102,6 @@ MongoClient.connect(connectionString,{useUnifiedTopology:true},{ useUnifiedTopol
   })
   .catch(err=>console.error('error: ' + err))
 
-app.listen(3000,function(){
-  console.log('listening on 3000')
+app.listen(3001,function(){
+  console.log('listening on 3001')
 })

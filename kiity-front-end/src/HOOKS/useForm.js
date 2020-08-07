@@ -1,7 +1,7 @@
 import {useState,useEffect} from 'react';
 
 
-const useForm = (validationCallback)=>{
+const useForm = (validationCallback,apicall,destination,setLiftedState)=>{
 
   const [values,setValue] = useState({search:''})
   const [errors,setErrors] = useState({errors:''})
@@ -14,20 +14,22 @@ const useForm = (validationCallback)=>{
   }
 
   const handleSubmit=(e)=>{
-    e.preventDefault()
-    console.log('this has been submitted')
-    setErrors(validationCallback(values.search))
-    setIsSubmitting(true)
+      e.preventDefault()
+      setErrors(validationCallback(values.search))
+      setIsSubmitting(true)
 
   }
 
 useEffect(()=>{
 
   if(isSubmitting ===true && Object.keys(errors).length === 0){
-    console.log('this is where the api call is going to go')
+    console.log(values.search)
+    apicall(destination,values.search)
+      .then(result=>console.log(result))
+      .catch(error=>console.log('ERROR: ' + error))
     setIsSubmitting(false)
   }
-},[errors,isSubmitting])
+},[errors,isSubmitting,destination,apicall])
 
   return{
     values,

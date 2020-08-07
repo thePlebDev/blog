@@ -1,15 +1,16 @@
-import {useState} from 'react';
-import axios from 'axios';
+import {useState,useEffect} from 'react';
 
 
-const useApi = (destination)=>{
+
+const useApi = (destination,apiCall)=>{
   const [data,setData] = useState('')
   const [errors,setErrors] = useState('')
-  axios.get(destination)
-    .then(results=>{
-      setData(results.data)
-    })
-    .catch(error=> setErrors('Something bad happened. Fly you fools!'))
+
+  useEffect(()=>{
+    apiCall(destination)
+      .then(results=>setData(results))
+      .catch(error=>setErrors([{title:'An error has occured, please try again'}]))
+  },[apiCall,destination])
 
     return{
       data,
